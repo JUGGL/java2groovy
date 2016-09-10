@@ -17,8 +17,8 @@ class AsyncVerticle extends AV {
             String body;
 
             // This is the equivalent of doing a null check AND a zero length check in Java!
-            if (msg.body) {     // Java equivalent::: if (msg.body()!=null && msg.body().length() > 0)
-                body = msg.body
+            if (msg.body()) {     // Java equivalent::: if (msg.body()!=null && msg.body().length() > 0)
+                body = msg.body()
             } else {
                 body = '''
                                 Nothing was in the message, so let's demonstrate
