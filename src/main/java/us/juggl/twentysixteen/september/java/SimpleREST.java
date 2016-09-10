@@ -1,7 +1,6 @@
-package us.juggl.twentysixteen.september.groovy;
+package us.juggl.twentysixteen.september.java;
 
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.MultiMap;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -41,8 +40,17 @@ public class SimpleREST extends AbstractVerticle {
         router.get("/rest/v1/customer/:id") .handler(this::customerDetail);
         router.get("/rest/v1/product")      .handler(this::productList);
         router.get("/rest/v1/product/:id")  .handler(this::productDetail);
+        router.get("/rest/v1/ping")         .handler(this::sendPing);
+        router.get("/rest/v1/ping/:content").handler(this::sendPing);
 
         vertx.createHttpServer().requestHandler(router::accept).listen(8080);
+        vertx.deployVerticle("us.juggl.twentysixteen.september.groovy.AsyncVerticle");
+    }
+
+    private void sendPing(RoutingContext ctx) {
+        vertx.eventBus().send("us.juggl.endpoint1", ctx.pathParam("content"), reply -> {
+            ok(ctx, (String)reply.result().body(), "text/plain");
+        });
     }
 
     private void productDetail(RoutingContext ctx) {
@@ -109,8 +117,12 @@ public class SimpleREST extends AbstractVerticle {
     }
 
     private void ok(RoutingContext ctx, String body) {
+        ok(ctx, body, "application/json");
+    }
+
+    private void ok(RoutingContext ctx, String body, String contentType) {
         ctx.response()
-                .putHeader("Content-Type", "application/json")
+                .putHeader("Content-Type", contentType)
                 .setStatusMessage(OK.reasonPhrase())
                 .setStatusCode(OK.code())
                 .end(body);
