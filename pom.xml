@@ -64,7 +64,7 @@
                     <mainClass>io.vertx.core.Launcher</mainClass>
                     <arguments>
                         <argument>run</argument>
-                        <argument>us.juggl.twentysixteen.september.java.SimpleREST</argument>
+                        <argument>us.juggl.twentysixteen.september.groovy.SimpleREST</argument>
                     </arguments>
                 </configuration>
             </plugin>
