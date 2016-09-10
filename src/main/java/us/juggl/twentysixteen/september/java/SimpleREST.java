@@ -108,8 +108,12 @@ public class SimpleREST extends AbstractVerticle {
     }
 
     private void ok(RoutingContext ctx, String body) {
+        ok(ctx, body, "application/json");
+    }
+
+    private void ok(RoutingContext ctx, String body, String contentType) {
         ctx.response()
-                .putHeader("Content-Type", "application/json")
+                .putHeader("Content-Type", contentType)
                 .setStatusMessage(OK.reasonPhrase())
                 .setStatusCode(OK.code())
                 .end(body);
