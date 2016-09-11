@@ -23,3 +23,8 @@ mvn clean compile exec:java
     * Map literals
     * Different method references (Closures actually!)
     * Differences between List syntax in Java and Groovy
+* Switch to `Step-03` for a view of some more advanced features of Groovy:
+  * [Type coersion](http://www.groovy-lang.org/objectorientation.html#_positional_argument_constructor) instead of constructors
+  * [Groovy Beans](http://groovy-lang.org/style-guide.html#_initializing_beans_with_named_parameters_and_the_default_constructor), which do not need getters/setters/constructors/builders
+  * Groovy's [JSON API](http://www.groovy-lang.org/json.html)
+  * [Slashy Strings](http://www.groovy-lang.org/syntax.html#_slashy_string)
