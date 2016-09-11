@@ -28,3 +28,10 @@ mvn clean compile exec:java
   * [Groovy Beans](http://groovy-lang.org/style-guide.html#_initializing_beans_with_named_parameters_and_the_default_constructor), which do not need getters/setters/constructors/builders
   * Groovy's [JSON API](http://www.groovy-lang.org/json.html)
   * [Slashy Strings](http://www.groovy-lang.org/syntax.html#_slashy_string)
+* `Step-04`: Bonus! Using Groovy for CLI scripts
+  * Using ranges to create [loops](http://grails.asia/groovy-each-examples)
+  * Handling user input
+  * Interesting Object [comparisons](http://groovy-lang.org/operators.html#_relational_operators)
+  * Simplified RegEx handling with the [Find Operator](http://groovy-lang.org/operators.html#_find_operator)
+  * Multiple assignment with the [equals operator](http://groovy-lang.org/operators.html#_multiple_assignment)
+  
