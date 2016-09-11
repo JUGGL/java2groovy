@@ -1,13 +1,15 @@
-package us.juggl.twentysixteen.september.groovy;
+package us.juggl.twentysixteen.september.groovy
 
-import io.vertx.core.AbstractVerticle as AV;
-import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.Router;
-import io.vertx.ext.web.RoutingContext;
+import io.vertx.core.AbstractVerticle as AV
+import io.vertx.core.json.JsonObject
+import io.vertx.ext.web.Router
+import io.vertx.ext.web.RoutingContext
+import us.juggl.twentysixteen.september.groovy.beans.Address
+import us.juggl.twentysixteen.september.groovy.beans.Customer
 
-import static io.netty.handler.codec.http.HttpResponseStatus.OK;
-
+import static groovy.json.JsonOutput.prettyPrint
+import static groovy.json.JsonOutput.toJson
+import static io.netty.handler.codec.http.HttpResponseStatus.OK
 /**
  * A simple example of a Vert.x based REST service
  */
@@ -32,7 +34,8 @@ public class SimpleREST extends AV {
             ok(ctx, SOME_HTML, "text/html");
         });
         router.get("/rest/v1/customer")     .handler({ ctx ->
-            ok(ctx, new JsonArray(customerList().collect { c -> new JsonObject(c) }).encodePrettily());
+            // Super simple JSON serialization! Have Bean/Map/List/Primitive, will serialize!
+            ok(ctx, prettyPrint(toJson(customerList())));
         });
         router.get("/rest/v1/customer/:id") .handler(this.&customerDetail);
         router.get("/rest/v1/product")      .handler(this.&productList);
@@ -51,14 +54,14 @@ public class SimpleREST extends AV {
     }
 
     private void productDetail(RoutingContext ctx) {
-        // MAP LITERALS!!! Define a map and never have to use `.put()` again!!!
+        // Converters! Instead of returning a Map, a map literal can be "converted" into a specific type!
         def data = [
-            "id": "1",
-            "name": "Widget",
-            "short_description": "A Simple widget",
-            "long_description": "This is our standard everyday use sort of widget"
-        ];
-        ok(ctx, new JsonObject(data).encodePrettily());
+            id: 1,
+            name: 'Widget',
+            short_description: 'A Simple widget',
+            long_description: 'This is our standard everyday use sort of widget'
+        ] as JsonObject
+        ok(ctx, data.encodePrettily());
     }
 
     private void productList(RoutingContext ctx) {
@@ -82,38 +85,38 @@ public class SimpleREST extends AV {
                 "long_description": "This is our lower quality cheap widget"
             ]
         ]
-        ok(ctx, new JsonArray(data.collect { p -> new JsonObject(p) }).encodePrettily());
+        ok(ctx, prettyPrint(toJson(data)));
     }
 
     private void customerDetail(RoutingContext ctx) {
+        // Another "converter" example, this time using a Bean. Take note of the nested Beans...
         def data = [
-            "id": "1",
-            "name": "John Smith",
-            "given_name": "John",
-            "family_name": "Smith"
-        ]
-        ok(ctx, new JsonObject(data).encodePrettily());
+            id: 1,
+            givenName: "John",
+            familyName: "Smith",
+            address: [
+                street1: '123 East Main St.',
+                city: 'Anytown',
+                postCode: '12345',
+                country: 'US'
+            ] as Address
+        ] as Customer
+        ok(ctx, prettyPrint(toJson(data)));
     }
 
-    private Map[] customerList() {
+    private Customer[] customerList() {
         def data = [
             customerRecord(),
-            customerRecord("Jane", "Doe", "2"),
-            customerRecord("Billy", "Connolly", "3")
+            customerRecord("Jane", "Doe", 2),
+            customerRecord("Billy", "Connolly", 3)
         ];
 
         return data;
     }
 
     // Groovy has default parameter values, so we no longer need the overloaded methods from Java
-    private Map customerRecord(givenName = "John", familyName = "Smith", id = "1") {
-        def customer = [
-            "id": id,
-            "name": "${givenName} ${familyName}".toString(),
-            "given_name": givenName,
-            "family_name": familyName
-        ];
-        return customer;
+    private Customer customerRecord(givenName = "John", familyName = "Smith", id = 1) {
+        def customer = new Customer(givenName: givenName, familyName: familyName, id: id)
     }
 
     // Same here, no overloaded method needed anymore because we use the default parameter value
